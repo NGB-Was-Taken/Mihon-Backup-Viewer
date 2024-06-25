@@ -5,6 +5,19 @@ var filterSource = ['all'];
 var filterTracking = 'all-entries';
 var activeTabId = null;
 var data;
+const trackingStatuses = ['Reading', 'Completed', 'On hold', 'Dropped', 'Plan to read', 'Rereading', 'Unread', 'Unfinished'];
+const trackerNames = ['MyAnimeList', 'AniList', 'Kitsu', 'Shikimori', 'Bangumi', 'Komga', 'MangaUpdates', 'Kavita', 'Suwayomi'];
+const trackingStatusMappings = [
+  {1: 0, 2: 1, 3: 2, 4: 3, 6: 4, 7: 5},
+  {1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5},
+  {1: 0, 2: 1, 3: 2, 4: 3, 5: 4},
+  {1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5},
+  {1: 4, 2: 1, 3: 0, 4: 2, 5: 3},
+  {1: 6, 2: 0, 3: 2},
+  {0: 0, 1: 4, 2: 1, 3: 7, 4: 2},
+  {1: 6, 2: 0, 3: 1},
+  {1: 6, 2: 0, 3: 1}
+];
 
 document.addEventListener('DOMContentLoaded', () => {
   // File Load
@@ -605,4 +618,22 @@ function dlJSON() {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+}
+
+function parseTrackingInformation(manga) {
+  const tracking = manga.tracking || [];
+  tracking.forEach(item => {
+    const trackerId = item.syncId;
+    const trackingUrl = item.trackingUrl;
+    const title = item.title;
+    const score = item.score;
+    const status = item.status;
+    const lastChapterRead = item.lastChapterRead;
+    const totalChapters = item.totalChapters;
+    const startedReadingDate = item.startedReadingDate;
+    const finishedReadingDate = item.finishedReadingDate;
+
+    const trackerText = trackerNames[trackerId-1];
+    const statusText = status ? trackingStatuses[trackingStatusMappings[trackerId-1][status]] : "Unknown";
+  });
 }
